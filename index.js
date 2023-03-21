@@ -6,11 +6,12 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
+require('dotenv').config() 
 
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-    apiKey: "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"
+    apiKey:process.env.API
 });
   
 const openai = new OpenAIApi(configuration);
@@ -18,7 +19,8 @@ const openai = new OpenAIApi(configuration);
 app.post("/generateimage",async(req,res)=>{
 
     try{
-        console.log(req.body)
+        console.log(req.body);
+        // console.log(process.env)
         const imageParameters = {
             prompt: req.body.prompt,
             n: parseInt(req.body.n),
