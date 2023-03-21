@@ -4,12 +4,7 @@ import { InputBox } from "./InputBox";
 import { InputBoxA } from "./InputBox";
 import { OutputBox } from "./OutputBox";
 
-const configuration = new Configuration({
-  apiKey: `${process.env.REACT_APP_SECRET_KEY}`
-  
-});
 
-const openai = new OpenAIApi(configuration);
 
 function App() {
 
@@ -19,16 +14,21 @@ function App() {
   const [imageUrl, setImageUrl] = useState("");
 
   const generateImage = async () => {
-    const imageParameters = {
-      prompt: userPrompt,
-      n: parseInt(number),
-      size: size
-    };
-
-    const response = await openai.createImage(imageParameters);
-    const urlData = response.data.data;
-    console.log(urlData);
-    setImageUrl(urlData);
+     
+    const res =await fetch("http://localhost:5000/generateimage",{
+         method:"POST",
+         headers:{
+          "Content-Type":"application/json"
+         },
+         body:JSON.stringify({
+            prompt:userPrompt,
+            size:size,
+            n:number
+         })
+    })
+    const data=await res.json();
+    // console.log(data)
+    setImageUrl(data.url);
 
   };
 

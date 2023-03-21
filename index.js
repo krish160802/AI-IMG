@@ -1,34 +1,60 @@
 const express = require("express");
 const app = express();
+const bodyParser=require('body-parser');
+const cors=require('cors');
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(cors());
+app.use(bodyParser.json());
 app.use(express.json());
 
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-    apiKey: "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"
-    
+    apiKey: "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"
 });
   
 const openai = new OpenAIApi(configuration);
 
+app.post("/generateimage",async(req,res)=>{
 
-app.post("/generateimage",(req,res)=>{
-    const generateImage = async () => {
+    try{
+        console.log(req.body)
         const imageParameters = {
-          prompt: req.body.prompt,
-          n: req.body.n,
-          size: req.body.size
+            prompt: req.body.prompt,
+            n: parseInt(req.body.n),
+            size: req.body.size
         };
     
         const response = await openai.createImage(imageParameters);
         const urlData = response.data.data;
-        console.log(urlData);
-        res.json(urlData);
-    };
-    
-    generateImage();
+        // console.log(urlData);
+        console.log("success")
+        return res.json({url:urlData});
+        }
+
+        catch(e){
+            console.log("error")
+        }
+   
 })
 
-app.listen(3000,()=>{
+// app.post("/generateimage",(req,res)=>{
+//     const generateImage = async () => {
+//         const imageParameters = {
+//           prompt: req.body.prompt,
+//           n: req.body.n,
+//           size: req.body.size
+//         };
+    
+//         const response = await openai.createImage(imageParameters);
+//         const urlData = response.data.data;
+//         console.log(urlData);
+//         res.json(urlData);
+//     };
+    
+//     generateImage();
+// })
+
+app.listen(5000,()=>{
     console.log("Server running");
 })
